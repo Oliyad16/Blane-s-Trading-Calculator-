@@ -41,31 +41,31 @@ const Dashboard: React.FC<DashboardProps> = ({ trades, settings }) => {
   return (
     <div className="space-y-6">
       {/* Top Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-slate-900 p-6 rounded-xl border border-slate-800">
-          <p className="text-slate-400 text-sm">Net Profit / Loss</p>
-          <p className={`text-3xl font-serif mt-2 ${totalPnL >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-             {totalPnL >= 0 ? '+' : ''}{totalPnL.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6">
+        <div className="bg-slate-900 p-4 md:p-6 rounded-xl border border-slate-800">
+          <p className="text-slate-500 text-[10px] md:text-sm uppercase font-bold tracking-wider">Net P/L</p>
+          <p className={`text-xl md:text-3xl font-serif mt-1 md:mt-2 ${totalPnL >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+             {totalPnL >= 0 ? '+' : ''}{totalPnL.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })}
           </p>
         </div>
-        <div className="bg-slate-900 p-6 rounded-xl border border-slate-800">
-          <p className="text-slate-400 text-sm">Win Rate</p>
-          <p className="text-3xl font-serif text-gold-500 mt-2">{winRate.toFixed(1)}%</p>
-          <p className="text-xs text-slate-500 mt-1">{wins}W - {losses}L</p>
+        <div className="bg-slate-900 p-4 md:p-6 rounded-xl border border-slate-800">
+          <p className="text-slate-500 text-[10px] md:text-sm uppercase font-bold tracking-wider">Win Rate</p>
+          <p className="text-xl md:text-3xl font-serif text-gold-500 mt-1 md:mt-2">{winRate.toFixed(1)}%</p>
+          <p className="text-[10px] text-slate-500 mt-0.5">{wins}W - {losses}L</p>
         </div>
-        <div className="bg-slate-900 p-6 rounded-xl border border-slate-800">
-          <p className="text-slate-400 text-sm">Current Balance</p>
-          <p className="text-3xl font-serif text-white mt-2">
-            {(settings.balance + totalPnL).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}
+        <div className="bg-slate-900 p-4 md:p-6 rounded-xl border border-slate-800 col-span-2 md:col-span-1">
+          <p className="text-slate-500 text-[10px] md:text-sm uppercase font-bold tracking-wider">Balance</p>
+          <p className="text-xl md:text-3xl font-serif text-white mt-1 md:mt-2">
+            {(settings.balance + totalPnL).toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })}
           </p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Chart Section */}
-        <div className="lg:col-span-2 bg-slate-900 p-6 rounded-xl border border-slate-800 min-h-[300px]">
-          <h3 className="text-xl font-serif text-white mb-6">Performance History</h3>
-          <div className="h-[250px] w-full">
+        <div className="lg:col-span-2 bg-slate-900 p-4 md:p-6 rounded-xl border border-slate-800 min-h-[280px] md:min-h-[300px]">
+          <h3 className="text-lg md:text-xl font-serif text-white mb-4 md:mb-6">Performance History</h3>
+          <div className="h-[200px] md:h-[250px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData}>
                 <XAxis dataKey="name" stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} />

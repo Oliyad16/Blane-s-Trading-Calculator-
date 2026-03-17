@@ -39,7 +39,7 @@ function App() {
   );
 
   return (
-    <div className="flex h-[100dvh] bg-slate-950 text-white overflow-hidden font-sans selection:bg-gold-500 selection:text-slate-900">
+    <div className="flex h-screen h-[100dvh] bg-slate-950 text-white overflow-hidden font-sans selection:bg-gold-500 selection:text-slate-900">
       
       {/* Sidebar */}
       <aside className={`${sidebarOpen ? 'w-64' : 'w-20'} bg-slate-900 border-r border-slate-800 transition-all duration-300 flex flex-col hidden md:flex`}>
@@ -71,14 +71,23 @@ function App() {
       </aside>
 
       {/* Mobile Nav */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-slate-900 border-t border-slate-800 z-50 flex justify-around p-3 pb-safe-area">
-          <button onClick={() => setActiveTab('dashboard')} className={`p-2 ${activeTab === 'dashboard' ? 'text-gold-500' : 'text-slate-500'}`}><LayoutDashboard /></button>
-          <button onClick={() => setActiveTab('calculator')} className={`p-2 ${activeTab === 'calculator' ? 'text-gold-500' : 'text-slate-500'}`}><CalcIcon /></button>
-          <button onClick={() => setActiveTab('journal')} className={`p-2 ${activeTab === 'journal' ? 'text-gold-500' : 'text-slate-500'}`}><BookOpen /></button>
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-slate-900/90 backdrop-blur-md border-t border-slate-800 z-50 flex justify-around p-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
+          <button onClick={() => setActiveTab('dashboard')} className={`flex flex-col items-center gap-1 p-2 transition-colors ${activeTab === 'dashboard' ? 'text-gold-500' : 'text-slate-500'}`}>
+            <LayoutDashboard size={20} />
+            <span className="text-[10px] font-medium uppercase tracking-tighter">Stats</span>
+          </button>
+          <button onClick={() => setActiveTab('calculator')} className={`flex flex-col items-center gap-1 p-2 transition-colors ${activeTab === 'calculator' ? 'text-gold-500' : 'text-slate-500'}`}>
+            <CalcIcon size={20} />
+            <span className="text-[10px] font-medium uppercase tracking-tighter">Calc</span>
+          </button>
+          <button onClick={() => setActiveTab('journal')} className={`flex flex-col items-center gap-1 p-2 transition-colors ${activeTab === 'journal' ? 'text-gold-500' : 'text-slate-500'}`}>
+            <BookOpen size={20} />
+            <span className="text-[10px] font-medium uppercase tracking-tighter">Journal</span>
+          </button>
       </div>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-y-auto p-4 md:p-8 pb-32 md:pb-8 relative overscroll-contain">
+      <main className="flex-1 overflow-y-auto p-4 md:p-8 pb-[calc(5rem+env(safe-area-inset-bottom))] md:pb-8 relative overscroll-contain scroll-smooth">
         <div className="max-w-7xl mx-auto min-h-full">
             {activeTab === 'calculator' && (
                 <div className="max-w-4xl mx-auto min-h-full flex flex-col justify-start md:justify-center pt-4 md:pt-0">

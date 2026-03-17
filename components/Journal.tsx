@@ -56,52 +56,52 @@ const Journal: React.FC<JournalProps> = ({ trades, onTradeUpdate }) => {
 
   return (
     <div className="bg-slate-900 rounded-xl border border-slate-800 shadow-2xl h-full flex flex-col">
-      <div className="p-6 border-b border-slate-800 flex justify-between items-center">
-        <h2 className="text-2xl font-serif text-gold-500">Trade Journal</h2>
+      <div className="p-4 md:p-6 border-b border-slate-800 flex justify-between items-center">
+        <h2 className="text-xl md:text-2xl font-serif text-gold-500">Trade Journal</h2>
         <button 
           onClick={() => setShowAddModal(true)}
-          className="flex items-center gap-2 bg-gold-600 hover:bg-gold-500 text-slate-950 font-bold px-4 py-2 rounded-lg transition-colors"
+          className="flex items-center gap-2 bg-gold-600 hover:bg-gold-500 text-slate-950 font-bold px-3 md:px-4 py-2 rounded-lg transition-colors text-sm md:text-base"
         >
-          <PlusCircle size={18} />
+          <PlusCircle size={16} className="md:w-[18px] md:h-[18px]" />
           Log Trade
         </button>
       </div>
 
       <div className="flex-1 overflow-y-auto p-4">
         {trades.length === 0 ? (
-          <div className="text-center text-slate-500 mt-20">
+          <div className="text-center text-slate-500 mt-10 md:mt-20">
             <p>No trades logged yet.</p>
-            <p className="text-sm">Start building your history today.</p>
+            <p className="text-xs md:text-sm">Start building your history today.</p>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-2 md:space-y-3">
             {trades.map(trade => (
-              <div key={trade.id} className="bg-slate-950 border border-slate-800 rounded-lg p-4 flex flex-col md:flex-row justify-between items-center hover:border-slate-600 transition-colors group">
-                <div className="flex items-center gap-4 w-full md:w-auto mb-2 md:mb-0">
-                  <div className={`p-2 rounded-full ${trade.type === 'BUY' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'}`}>
-                    {trade.type === 'BUY' ? <TrendingUp size={20} /> : <TrendingDown size={20} />}
+              <div key={trade.id} className="bg-slate-950 border border-slate-800 rounded-lg p-3 md:p-4 flex flex-col md:flex-row justify-between items-center hover:border-slate-600 transition-colors group">
+                <div className="flex items-center gap-3 md:gap-4 w-full md:w-auto mb-2 md:mb-0">
+                  <div className={`p-1.5 md:p-2 rounded-full ${trade.type === 'BUY' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'}`}>
+                    {trade.type === 'BUY' ? <TrendingUp size={18} className="md:w-5 md:h-5" /> : <TrendingDown size={18} className="md:w-5 md:h-5" />}
                   </div>
-                  <div>
+                  <div className="flex-1 md:flex-none">
                     <div className="flex items-center gap-2">
-                       <span className="font-bold text-white">{trade.pair}</span>
-                       <span className={`text-xs px-2 py-0.5 rounded-full border ${getStatusColor(trade.status)}`}>{trade.status}</span>
+                       <span className="font-bold text-white text-sm md:text-base">{trade.pair}</span>
+                       <span className={`text-[10px] px-1.5 py-0.5 rounded-full border ${getStatusColor(trade.status)}`}>{trade.status}</span>
                     </div>
-                    <div className="text-xs text-slate-500">{trade.date} • {trade.lotSize} Lots</div>
+                    <div className="text-[10px] md:text-xs text-slate-500">{trade.date} • {trade.lotSize} Lots</div>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-6 w-full md:w-auto justify-between md:justify-end">
+                <div className="flex items-center gap-4 md:gap-6 w-full md:w-auto justify-between md:justify-end">
                    <div className="text-right">
-                      <div className={`font-mono font-bold text-lg ${trade.pnl >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                      <div className={`font-mono font-bold text-base md:text-lg ${trade.pnl >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
                         {trade.pnl >= 0 ? '+' : ''}{trade.pnl.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}
                       </div>
-                      <div className="text-xs text-slate-500 truncate max-w-[150px]">{trade.setup || 'No Setup'}</div>
+                      <div className="text-[10px] md:text-xs text-slate-500 truncate max-w-[120px] md:max-w-[150px]">{trade.setup || 'No Setup'}</div>
                    </div>
                    <button 
                     onClick={() => handleDelete(trade.id)}
-                    className="text-slate-600 hover:text-rose-400 opacity-0 group-hover:opacity-100 transition-opacity p-2"
+                    className="text-slate-600 hover:text-rose-400 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity p-2"
                    >
-                     <Trash2 size={18} />
+                     <Trash2 size={16} className="md:w-[18px] md:h-[18px]" />
                    </button>
                 </div>
               </div>
@@ -112,11 +112,11 @@ const Journal: React.FC<JournalProps> = ({ trades, onTradeUpdate }) => {
 
       {/* Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-slate-900 rounded-2xl border border-slate-700 w-full max-w-lg p-6 shadow-2xl">
-            <h3 className="text-xl font-serif text-white mb-6">Log New Trade</h3>
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-slate-900 rounded-2xl border border-slate-700 w-full max-w-lg p-5 md:p-6 shadow-2xl my-auto">
+            <h3 className="text-lg md:text-xl font-serif text-white mb-4 md:mb-6">Log New Trade</h3>
             
-            <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="grid grid-cols-2 gap-3 md:gap-4 mb-3 md:mb-4">
               <div>
                 <label className="text-xs text-slate-400 uppercase">Date</label>
                 <input type="date" className="w-full bg-slate-950 border border-slate-700 rounded p-2 text-white" 

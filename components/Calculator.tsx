@@ -229,8 +229,8 @@ const Calculator: React.FC<CalculatorProps> = ({ settings }) => {
   };
 
   return (
-    <div className="w-full animate-fade-in pb-20">
-        <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+    <div className="w-full animate-fade-in pb-10">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-6 md:mb-8 gap-4">
              <div className="relative w-full md:w-auto">
                  <select 
                     value={instrument.symbol}
@@ -250,39 +250,86 @@ const Calculator: React.FC<CalculatorProps> = ({ settings }) => {
              </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <div className="lg:col-span-7 space-y-6">
-                <div className="bg-slate-900 rounded-3xl p-8 border border-slate-800 shadow-2xl space-y-8">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
+            {/* Summary Section - Top on Mobile */}
+            <div className="lg:col-span-5 lg:order-2 space-y-6">
+                <div className="bg-gradient-to-br from-slate-900 to-slate-950 rounded-2xl md:rounded-3xl p-5 md:p-8 border border-slate-800 shadow-2xl relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity hidden md:block"><Zap size={140} className="text-gold-500" /></div>
+                    <div className="relative z-10 space-y-6 md:space-y-10">
                         <div>
-                            <label className="text-[10px] uppercase text-slate-500 font-bold tracking-widest mb-3 block">Account Balance</label>
+                            <h3 className="text-slate-400 text-[10px] font-bold uppercase tracking-[0.3em] mb-4 md:mb-6 flex items-center gap-3"><Activity size={16} className="text-gold-500" /> Position Summary</h3>
+                            <div className="grid grid-cols-2 gap-4 md:gap-6">
+                                <div className="bg-slate-800/20 p-4 md:p-5 rounded-xl md:rounded-2xl border border-slate-700/30 backdrop-blur-sm">
+                                    <p className="text-[10px] text-slate-500 uppercase font-bold mb-1 tracking-wider">Execution Risk</p>
+                                    <p className="text-2xl md:text-3xl font-serif text-rose-400">${results.risk.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+                                </div>
+                                <div className="bg-slate-800/20 p-4 md:p-5 rounded-xl md:rounded-2xl border border-slate-700/30 backdrop-blur-sm">
+                                    <p className="text-[10px] text-slate-500 uppercase font-bold mb-1 tracking-wider">Target Reward</p>
+                                    <p className="text-2xl md:text-3xl font-serif text-emerald-400">${results.reward.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="space-y-3 md:space-y-5">
+                            <div className="flex justify-between items-center pb-2 md:pb-3 border-b border-slate-800/50">
+                                <span className="text-xs md:text-sm text-slate-400">Risk/Reward Ratio</span>
+                                <span className="text-xl md:text-2xl font-bold text-gold-500">1 : {results.rr}</span>
+                            </div>
+                            <div className="flex justify-between items-center pb-2 md:pb-3 border-b border-slate-800/50">
+                                <span className="text-xs md:text-sm text-slate-400">Execution Lots</span>
+                                <span className="text-xl md:text-2xl font-bold text-white">{results.lots.toFixed(2)} <span className="text-xs text-slate-500 font-normal ml-1">Lots</span></span>
+                            </div>
+                            <div className="flex justify-between items-center pb-2 md:pb-3 border-b border-slate-800/50">
+                                <span className="text-xs md:text-sm text-slate-400">Value per {unitLabel}</span>
+                                <span className="text-sm md:text-base font-mono text-slate-300">${results.valuePerUnit.toFixed(5)}</span>
+                            </div>
+                        </div>
+                        <div className="pt-1 md:pt-2">
+                            <div className="bg-gold-500/5 border border-gold-500/10 p-4 md:p-5 rounded-xl md:rounded-2xl flex items-start gap-4 shadow-inner">
+                                <div className="p-2 md:p-3 bg-gold-500/20 rounded-lg md:rounded-xl text-gold-500"><CheckSquare size={20} className="md:w-6 md:h-6" /></div>
+                                <div>
+                                    <p className="text-[10px] md:text-xs font-bold text-gold-500 uppercase tracking-widest mb-1">Market Logic Verified</p>
+                                    <p className="text-[10px] md:text-xs text-slate-400 leading-relaxed">
+                                        {instrument.symbol === 'USDMXN' ? 'Non-linear PnL calculation active.' : 'Linear pip value calculation active.'}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Inputs Section */}
+            <div className="lg:col-span-7 lg:order-1 space-y-6">
+                <div className="bg-slate-900 rounded-2xl md:rounded-3xl p-6 md:p-8 border border-slate-800 shadow-2xl space-y-6 md:space-y-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
+                        <div>
+                            <label className="text-[10px] uppercase text-slate-500 font-bold tracking-widest mb-2 md:mb-3 block">Account Balance</label>
                             <div className="relative">
                                 <DollarSign size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
-                                <input type="number" value={balance} onChange={(e) => setBalance(Number(e.target.value))} className="w-full bg-slate-950 border border-slate-700 rounded-xl py-3 pl-10 pr-4 text-white outline-none focus:border-gold-500 transition-colors" />
+                                <input type="number" value={balance} onChange={(e) => setBalance(Number(e.target.value))} className="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 md:py-3 pl-10 pr-4 text-white outline-none focus:border-gold-500 transition-colors" />
                             </div>
                         </div>
                         <div>
-                            <label className="text-[10px] uppercase text-slate-500 font-bold tracking-widest mb-3 block">Entry Price</label>
-                            <input type="number" value={entryPrice} step={instrument.pipSize} onChange={(e) => handleEntryPriceChange(Number(e.target.value))} className="w-full bg-slate-950 border border-slate-700 rounded-xl py-3 px-4 text-white outline-none font-mono text-lg transition-colors focus:border-gold-500" />
+                            <label className="text-[10px] uppercase text-slate-500 font-bold tracking-widest mb-2 md:mb-3 block">Entry Price</label>
+                            <input type="number" value={entryPrice} step={instrument.pipSize} onChange={(e) => handleEntryPriceChange(Number(e.target.value))} className="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 md:py-3 px-4 text-white outline-none font-mono text-lg transition-colors focus:border-gold-500" />
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-2">
-                        <div className={`p-4 rounded-2xl border ${calcMode === 'RISK' ? 'border-gold-500/50 bg-gold-500/5 shadow-inner' : 'border-transparent'}`}>
-                            <label className="text-[10px] uppercase text-slate-500 font-bold tracking-widest mb-3 block">Risk Amount ($)</label>
-                            <input type="number" value={riskAmount} onChange={(e) => handleRiskAmountChange(e.target.value)} className="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white outline-none focus:border-gold-500 transition-colors" />
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 pt-2">
+                        <div className={`p-3 md:p-4 rounded-xl md:rounded-2xl border ${calcMode === 'RISK' ? 'border-gold-500/50 bg-gold-500/5 shadow-inner' : 'border-transparent'}`}>
+                            <label className="text-[10px] uppercase text-slate-500 font-bold tracking-widest mb-2 md:mb-3 block">Risk Amount ($)</label>
+                            <input type="number" value={riskAmount} onChange={(e) => handleRiskAmountChange(e.target.value)} className="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 md:py-2.5 px-3 text-white outline-none focus:border-gold-500 transition-colors" />
                         </div>
-                        <div className={`p-4 rounded-2xl border ${calcMode === 'RISK' ? 'border-gold-500/50 bg-gold-500/5 shadow-inner' : 'border-transparent'}`}>
-                            <label className="text-[10px] uppercase text-slate-500 font-bold tracking-widest mb-3 block">Risk %</label>
+                        <div className={`p-3 md:p-4 rounded-xl md:rounded-2xl border ${calcMode === 'RISK' ? 'border-gold-500/50 bg-gold-500/5 shadow-inner' : 'border-transparent'}`}>
+                            <label className="text-[10px] uppercase text-slate-500 font-bold tracking-widest mb-2 md:mb-3 block">Risk %</label>
                             <div className="relative">
                                 <Percent size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500" />
-                                {/* Fixed: Passed e.target.value instead of an anonymous function */}
-                                <input type="number" value={riskPercent} onChange={(e) => handleRiskPercentChange(e.target.value)} className="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white outline-none focus:border-gold-500 transition-colors" />
+                                <input type="number" value={riskPercent} onChange={(e) => handleRiskPercentChange(e.target.value)} className="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 md:py-2.5 px-3 text-white outline-none focus:border-gold-500 transition-colors" />
                             </div>
                         </div>
-                        <div className={`p-4 rounded-2xl border ${calcMode === 'LOTS' ? 'border-gold-500/50 bg-gold-500/5 shadow-inner' : 'border-transparent'}`}>
-                            <label className="text-[10px] uppercase text-slate-500 font-bold tracking-widest mb-3 block">Lot Size</label>
-                            <input type="number" step="0.01" min="0.01" value={lotSize} onChange={(e) => handleLotChange(e.target.value)} className="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-gold-400 font-bold outline-none focus:border-gold-500 transition-colors" />
+                        <div className={`p-3 md:p-4 rounded-xl md:rounded-2xl border ${calcMode === 'LOTS' ? 'border-gold-500/50 bg-gold-500/5 shadow-inner' : 'border-transparent'}`}>
+                            <label className="text-[10px] uppercase text-slate-500 font-bold tracking-widest mb-2 md:mb-3 block">Lot Size</label>
+                            <input type="number" step="0.01" min="0.01" value={lotSize} onChange={(e) => handleLotChange(e.target.value)} className="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 md:py-2.5 px-3 text-gold-400 font-bold outline-none focus:border-gold-500 transition-colors" />
                         </div>
                     </div>
 
@@ -295,106 +342,56 @@ const Calculator: React.FC<CalculatorProps> = ({ settings }) => {
                           <div className="grid grid-cols-3 gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800">
                              <button 
                                 onClick={() => setContractSize(1)} 
-                                className={`flex flex-col items-center py-2.5 rounded-lg transition-all ${contractSize === 1 ? 'bg-slate-800 text-gold-400 shadow-lg' : 'text-slate-500 hover:text-slate-300'}`}
+                                className={`flex flex-col items-center py-2 rounded-lg transition-all ${contractSize === 1 ? 'bg-slate-800 text-gold-400 shadow-lg' : 'text-slate-500 hover:text-slate-300'}`}
                              >
-                               <span className="text-[10px] font-black tracking-wider uppercase">MICRO</span>
-                               <span className="text-[7px] opacity-40 uppercase font-bold mt-1">(1x Mult)</span>
+                               <span className="text-[9px] md:text-[10px] font-black tracking-wider uppercase">MICRO</span>
+                               <span className="text-[7px] opacity-40 uppercase font-bold mt-0.5 md:mt-1">(1x)</span>
                              </button>
                              <button 
                                 onClick={() => setContractSize(100)} 
-                                className={`flex flex-col items-center py-2.5 rounded-lg transition-all ${contractSize === 100 ? 'bg-slate-800 text-gold-400 shadow-lg' : 'text-slate-500 hover:text-slate-300'}`}
+                                className={`flex flex-col items-center py-2 rounded-lg transition-all ${contractSize === 100 ? 'bg-slate-800 text-gold-400 shadow-lg' : 'text-slate-500 hover:text-slate-300'}`}
                              >
-                               <span className="text-[10px] font-black tracking-wider uppercase">MINI</span>
-                               <span className="text-[7px] opacity-40 uppercase font-bold mt-1">(100x Mult)</span>
+                               <span className="text-[9px] md:text-[10px] font-black tracking-wider uppercase">MINI</span>
+                               <span className="text-[7px] opacity-40 uppercase font-bold mt-0.5 md:mt-1">(100x)</span>
                              </button>
                              <button 
                                 onClick={() => setContractSize(1000)} 
-                                className={`flex flex-col items-center py-2.5 rounded-lg transition-all ${contractSize === 1000 ? 'bg-slate-800 text-gold-400 shadow-lg' : 'text-slate-500 hover:text-slate-300'}`}
+                                className={`flex flex-col items-center py-2 rounded-lg transition-all ${contractSize === 1000 ? 'bg-slate-800 text-gold-400 shadow-lg' : 'text-slate-500 hover:text-slate-300'}`}
                              >
-                               <span className="text-[10px] font-black tracking-wider uppercase">STANDARD</span>
-                               <span className="text-[7px] opacity-40 uppercase font-bold mt-1">(1000x Mult)</span>
+                               <span className="text-[9px] md:text-[10px] font-black tracking-wider uppercase">STD</span>
+                               <span className="text-[7px] opacity-40 uppercase font-bold mt-0.5 md:mt-1">(1000x)</span>
                              </button>
                           </div>
-                          <p className="text-[9px] text-slate-600 mt-2 uppercase font-medium flex items-center gap-1">
-                             <ShieldCheck size={10} className="text-gold-500" />
-                             Multi-contract logic active for {instrument.symbol}.
-                          </p>
                        </div>
                     )}
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                    <div className="bg-slate-900 rounded-3xl p-8 border border-slate-800 shadow-xl relative overflow-hidden">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
+                    <div className="bg-slate-900 rounded-2xl md:rounded-3xl p-6 md:p-8 border border-slate-800 shadow-xl relative overflow-hidden">
                         <div className="absolute top-0 left-0 w-1 h-full bg-rose-500"></div>
-                        <h3 className="flex items-center gap-3 mb-6 text-rose-400 font-bold uppercase text-sm tracking-widest"><TrendingUp className="rotate-180" size={20} /> Stop Loss</h3>
-                        <div className="space-y-6">
+                        <h3 className="flex items-center gap-3 mb-4 md:mb-6 text-rose-400 font-bold uppercase text-xs md:text-sm tracking-widest"><TrendingUp className="rotate-180" size={18} /> Stop Loss</h3>
+                        <div className="space-y-4 md:space-y-6">
                             <div>
-                                <label className="text-[10px] text-slate-500 block mb-2 uppercase font-bold tracking-wider">Distance ({unitLabel})</label>
-                                <input type="number" value={slDistance} onChange={(e) => handleSlDistChange(Number(e.target.value))} className="w-full bg-slate-950 border border-slate-700 rounded-xl py-3 px-4 text-white outline-none focus:border-rose-500 font-mono transition-colors" />
+                                <label className="text-[10px] text-slate-500 block mb-1.5 md:mb-2 uppercase font-bold tracking-wider">Distance ({unitLabel})</label>
+                                <input type="number" value={slDistance} onChange={(e) => handleSlDistChange(Number(e.target.value))} className="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 md:py-3 px-4 text-white outline-none focus:border-rose-500 font-mono transition-colors" />
                             </div>
                             <div>
-                                <label className="text-[10px] text-slate-500 block mb-2 uppercase font-bold tracking-wider">Exact Price</label>
-                                <input type="number" value={slPrice} step={instrument.pipSize} onChange={(e) => handleSlPriceChange(Number(e.target.value))} className="w-full bg-slate-950 border border-slate-700 rounded-xl py-3 px-4 text-white outline-none focus:border-rose-500 font-mono transition-colors" />
+                                <label className="text-[10px] text-slate-500 block mb-1.5 md:mb-2 uppercase font-bold tracking-wider">Exact Price</label>
+                                <input type="number" value={slPrice} step={instrument.pipSize} onChange={(e) => handleSlPriceChange(Number(e.target.value))} className="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 md:py-3 px-4 text-white outline-none focus:border-rose-500 font-mono transition-colors" />
                             </div>
                         </div>
                     </div>
-                    <div className="bg-slate-900 rounded-3xl p-8 border border-slate-800 shadow-xl relative overflow-hidden">
+                    <div className="bg-slate-900 rounded-2xl md:rounded-3xl p-6 md:p-8 border border-slate-800 shadow-xl relative overflow-hidden">
                         <div className="absolute top-0 left-0 w-1 h-full bg-emerald-500"></div>
-                        <h3 className="flex items-center gap-3 mb-6 text-emerald-400 font-bold uppercase text-sm tracking-widest"><Target size={20} /> Take Profit</h3>
-                        <div className="space-y-6">
+                        <h3 className="flex items-center gap-3 mb-4 md:mb-6 text-emerald-400 font-bold uppercase text-xs md:text-sm tracking-widest"><Target size={18} /> Take Profit</h3>
+                        <div className="space-y-4 md:space-y-6">
                             <div>
-                                <label className="text-[10px] text-slate-500 block mb-2 uppercase font-bold tracking-wider">Distance ({unitLabel})</label>
-                                <input type="number" value={tpDistance} onChange={(e) => handleTpDistChange(Number(e.target.value))} className="w-full bg-slate-950 border border-slate-700 rounded-xl py-3 px-4 text-white outline-none focus:border-emerald-500 font-mono transition-colors" />
+                                <label className="text-[10px] text-slate-500 block mb-1.5 md:mb-2 uppercase font-bold tracking-wider">Distance ({unitLabel})</label>
+                                <input type="number" value={tpDistance} onChange={(e) => handleTpDistChange(Number(e.target.value))} className="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 md:py-3 px-4 text-white outline-none focus:border-emerald-500 font-mono transition-colors" />
                             </div>
                             <div>
-                                <label className="text-[10px] text-slate-500 block mb-2 uppercase font-bold tracking-wider">Exact Price</label>
-                                <input type="number" value={tpPrice} step={instrument.pipSize} onChange={(e) => handleTpPriceChange(Number(e.target.value))} className="w-full bg-slate-950 border border-slate-700 rounded-xl py-3 px-4 text-white outline-none focus:border-emerald-500 font-mono transition-colors" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div className="lg:col-span-5 space-y-6">
-                <div className="bg-gradient-to-br from-slate-900 to-slate-950 rounded-3xl p-8 border border-slate-800 shadow-2xl relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity"><Zap size={140} className="text-gold-500" /></div>
-                    <div className="relative z-10 space-y-10">
-                        <div>
-                            <h3 className="text-slate-400 text-[10px] font-bold uppercase tracking-[0.3em] mb-6 flex items-center gap-3"><Activity size={16} className="text-gold-500" /> Position Summary</h3>
-                            <div className="grid grid-cols-2 gap-6">
-                                <div className="bg-slate-800/20 p-5 rounded-2xl border border-slate-700/30 backdrop-blur-sm">
-                                    <p className="text-[10px] text-slate-500 uppercase font-bold mb-1 tracking-wider">Execution Risk</p>
-                                    <p className="text-3xl font-serif text-rose-400">${results.risk.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
-                                </div>
-                                <div className="bg-slate-800/20 p-5 rounded-2xl border border-slate-700/30 backdrop-blur-sm">
-                                    <p className="text-[10px] text-slate-500 uppercase font-bold mb-1 tracking-wider">Target Reward</p>
-                                    <p className="text-3xl font-serif text-emerald-400">${results.reward.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="space-y-5">
-                            <div className="flex justify-between items-center pb-3 border-b border-slate-800/50">
-                                <span className="text-sm text-slate-400">Risk/Reward Ratio</span>
-                                <span className="text-2xl font-bold text-gold-500">1 : {results.rr}</span>
-                            </div>
-                            <div className="flex justify-between items-center pb-3 border-b border-slate-800/50">
-                                <span className="text-sm text-slate-400">Execution Lots</span>
-                                <span className="text-2xl font-bold text-white">{results.lots.toFixed(2)} <span className="text-xs text-slate-500 font-normal ml-1">Lots</span></span>
-                            </div>
-                            <div className="flex justify-between items-center pb-3 border-b border-slate-800/50">
-                                <span className="text-sm text-slate-400">Value per {unitLabel}</span>
-                                <span className="text-base font-mono text-slate-300">${results.valuePerUnit.toFixed(5)}</span>
-                            </div>
-                        </div>
-                        <div className="pt-2">
-                            <div className="bg-gold-500/5 border border-gold-500/10 p-5 rounded-2xl flex items-start gap-4 shadow-inner">
-                                <div className="p-3 bg-gold-500/20 rounded-xl text-gold-500"><CheckSquare size={24} /></div>
-                                <div>
-                                    <p className="text-xs font-bold text-gold-500 uppercase tracking-widest mb-1">Market Logic Verified</p>
-                                    <p className="text-xs text-slate-400 leading-relaxed">
-                                        {instrument.symbol === 'USDMXN' ? 'Non-linear PnL calculation active.' : 'Linear pip value calculation active.'}
-                                    </p>
-                                </div>
+                                <label className="text-[10px] text-slate-500 block mb-1.5 md:mb-2 uppercase font-bold tracking-wider">Exact Price</label>
+                                <input type="number" value={tpPrice} step={instrument.pipSize} onChange={(e) => handleTpPriceChange(Number(e.target.value))} className="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 md:py-3 px-4 text-white outline-none focus:border-emerald-500 font-mono transition-colors" />
                             </div>
                         </div>
                     </div>
